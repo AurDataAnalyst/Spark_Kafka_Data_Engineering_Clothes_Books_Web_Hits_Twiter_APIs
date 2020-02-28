@@ -1,0 +1,199 @@
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> exit
+exit
+^C
+mysql> exit();
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'exit()' at line 1
+mysql> exit()
+    -> 
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'exit()' at line 1
+mysql> exit
+Bye
+(base) root@auredata-HP-Notebook:~# clear
+
+(base) root@auredata-HP-Notebook:~# mysql -u root -pcloudera
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.7.28-0ubuntu0.18.04.4 (Ubuntu)
+
+Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> GRANT ALL ON *.* to cloudera@'%' IDENTIFIED BY 'cloudera';
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> exit;
+Bye
+(base) root@auredata-HP-Notebook:~# mysql -u cloudera -pcloudera
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 4
+Server version: 5.7.28-0ubuntu0.18.04.4 (Ubuntu)
+
+Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database jdbctest;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use jdbctest;
+Database changed
+mysql> CREATE TABLE jdbctest.jdbc_source (
+    ->    TEST_ID INT AUTO_INCREMENT,
+    ->    `TEST_TIMESTAMP` TIMESTAMP,
+    ->   PRIMARY KEY (TEST_ID)
+    -> ) ENGINE = InnoDB ROW_FORMAT = DEFAULT;CREATE TABLE jdbctest.jdbc_source (
+Query OK, 0 rows affected (0.02 sec)
+
+    ->    TEST_ID INT AUTO_INCREMENT,
+    ->    `TEST_TIMESTAMP` TIMESTAMP,
+    ->   PRIMARY KEY (TEST_ID)
+    -> ^C
+
+^C
+mysql> insert into jdbc_source(TEST_TIMESTAMP) values ( now());
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into jdbc_source(TEST_TIMESTAMP) values ( now());
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into jdbc_source(TEST_TIMESTAMP) values ( now());
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into jdbc_source(TEST_TIMESTAMP) values ( now());
+Query OK, 1 row affected (0.01 sec)
+
+mysql> describe jdbctest.jdbc_source;
++----------------+-----------+------+-----+-------------------+-----------------------------+
+| Field          | Type      | Null | Key | Default           | Extra                       |
++----------------+-----------+------+-----+-------------------+-----------------------------+
+| TEST_ID        | int(11)   | NO   | PRI | NULL              | auto_increment              |
+| TEST_TIMESTAMP | timestamp | NO   |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
++----------------+-----------+------+-----+-------------------+-----------------------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from jdbc_source;
++---------+---------------------+
+| TEST_ID | TEST_TIMESTAMP      |
++---------+---------------------+
+|       1 | 2020-01-26 12:40:40 |
+|       2 | 2020-01-26 12:40:40 |
+|       3 | 2020-01-26 12:40:40 |
+|       4 | 2020-01-26 12:40:44 |
++---------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> create database exec_reports;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use exec_reports;
+Database changed
+mysql> 
+mysql> CREATE TABLE exec_reports.exec_summary (
+    ->    ID INT AUTO_INCREMENT NOT NULL,
+    ->    REPORT_DATE DATETIME NOT NULL,
+    ->    SALES DOUBLE NOT NULL DEFAULT '0',
+    ->    WEB_HITS INT NOT NULL DEFAULT '0',
+    ->    TWEETS INT NOT NULL DEFAULT '0',
+    ->    TWEETS_POSITIVE INT NOT NULL DEFAULT '0',
+    ->   PRIMARY KEY (ID),
+    ->   CONSTRAINT UC_datehour UNIQUE (REPORT_DATE)
+    -> ) ENGINE = InnoDB ROW_FORMAT = DEFAULT;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> INSERT INTO exec_reports.exec_summary
+    -> (REPORT_DATE) VALUES (date_format(now(), '%Y-%m-%d %H:00:00'));
+Query OK, 1 row affected (0.01 sec)
+
+mysql> create database us_sales;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use us_sales;
+Database changed
+mysql> 
+mysql> CREATE TABLE `garment_sales` (
+    ->   `ID` int(11) NOT NULL AUTO_INCREMENT,
+    ->   `GARMENT_NAME` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+    ->   SALES_DATE DATETIME NOT NULL,
+    ->   `ORDER_VALUE` double DEFAULT '0',
+    ->   PRIMARY KEY (`ID`)
+    -> ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> INSERT INTO us_sales.garment_sales
+    -> (GARMENT_NAME, SALES_DATE, ORDER_VALUE) 
+    -> VALUES ('Mens Pants', now(), 45.99);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> 
+mysql> INSERT INTO us_sales.garment_sales
+    -> (GARMENT_NAME, SALES_DATE, ORDER_VALUE) 
+    -> VALUES ('Womens Tops',now(), 29.99);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> create database eu_sales;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use eu_sales;
+Database changed
+mysql> 
+mysql> CREATE TABLE `book_sales` (
+    ->   `ID` int(11) NOT NULL AUTO_INCREMENT,
+    ->   `BOOK_NAME` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+    ->   SALES_DATE DATETIME NOT NULL,
+    ->   `ORDER_AMOUNT` double DEFAULT '0',
+    ->   PRIMARY KEY (`ID`)
+    -> ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> INSERT INTO eu_sales.book_sales
+    -> (BOOK_NAME, SALES_DATE, ORDER_AMOUNT) 
+    -> VALUES ('Java Programming', now(),25.00);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> 
+mysql> INSERT INTO eu_sales.book_sales
+    -> (BOOK_NAME, SALES_DATE, ORDER_AMOUNT) 
+    -> VALUES ('Spark Guide',now(), 32.00);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| eu_sales           |
+| exec_reports       |
+| jdbctest           |
+| mysql              |
+| performance_schema |
+| sys                |
+| us_sales           |
++--------------------+
+8 rows in set (0.00 sec)
+
+mysql> 
+

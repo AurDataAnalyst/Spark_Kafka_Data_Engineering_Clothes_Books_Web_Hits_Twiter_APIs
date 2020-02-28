@@ -1,0 +1,28 @@
+(base) auredata@auredata-HP-Notebook:~/spark-data-engg$ cd
+(base) auredata@auredata-HP-Notebook:~$ sudo su
+[sudo] password for auredata:       
+root@auredata-HP-Notebook:/home/auredata# mysql -u cloudera -pcloudera
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 7
+Server version: 5.7.28-0ubuntu0.18.04.4 (Ubuntu)
+
+Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> select * from exec_reports.exec_summary;
++----+---------------------+-------+----------+--------+-----------------+
+| ID | REPORT_DATE         | SALES | WEB_HITS | TWEETS | TWEETS_POSITIVE |
++----+---------------------+-------+----------+--------+-----------------+
+|  1 | 2020-01-26 13:00:00 |     0 |        0 |      0 |               0 |
++----+---------------------+-------+----------+--------+-----------------+
+1 row in set (0.00 sec)
+
+mysql> 
+
+
